@@ -88,12 +88,11 @@ final class ButtonTests: XCTestCase {
         XCTAssertEqual(template.image.isSymbolImage, true)
     }
 
-    func testDestination() throws {
+    func testDestination() async throws {
         let button = Button(destination: { DestinationView() }, title: "Hello")
 
         let pushExpectation = expectation(description: "Should push template when navigating")
-        let completionExpectation = expectation(description: "Should call completion after navigating")
-
+        
         let interfaceController = MockInterfaceController()
         interfaceController.pushTemplateExpectation = pushExpectation
 
@@ -103,21 +102,22 @@ final class ButtonTests: XCTestCase {
         environmentValues.makeActive()
         let template = try button.makeTemplate(CPListItem.self)
         environmentValues.resignActive()
-        
+
         XCTAssertEqual(template.text, "Hello")
 
-        template.handler?(template, { completionExpectation.fulfill() })
+        await withCheckedContinuation { continuation in
+            template.handler?(template, { continuation.resume() })
+        }
 
-        wait(for: [pushExpectation, completionExpectation], timeout: 0.1)
+        await fulfillment(of: [pushExpectation], timeout: 0.1)
 
         XCTAssertEqual(interfaceController.pushedTemplates[0] is CPListTemplate, true)
     }
 
-    func testNowPlayingDestination() throws {
+    func testNowPlayingDestination() async throws {
         let button = Button(destination: { NowPlaying() }, title: "Hello")
 
         let pushExpectation = expectation(description: "Should push template when navigating")
-        let completionExpectation = expectation(description: "Should call completion after navigating")
 
         let interfaceController = MockInterfaceController()
         interfaceController.pushTemplateExpectation = pushExpectation
@@ -131,9 +131,11 @@ final class ButtonTests: XCTestCase {
 
         XCTAssertEqual(template.text, "Hello")
 
-        template.handler?(template, { completionExpectation.fulfill() })
+        await withCheckedContinuation { continuation in
+            template.handler?(template, { continuation.resume() })
+        }
 
-        wait(for: [pushExpectation, completionExpectation], timeout: 0.1)
+        await fulfillment(of: [pushExpectation], timeout: 0.1)
 
         XCTAssertEqual(interfaceController.pushedTemplates[0] is CPNowPlayingTemplate, true)
     }

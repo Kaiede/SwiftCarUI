@@ -72,7 +72,7 @@ final class ImageButtonsTests: XCTestCase {
         wait(for: [itemExpectation, itemCompletionExpectation], timeout: 0.01)
     }
 
-    func testImageButtonsDestination() throws {
+    func testImageButtonsDestination() async throws {
         let buttonsRow = ImageButtons(title: "Hello World", destination: { _ in NowPlaying() }) {
             Image(systemName: "cloud")
             Image(systemName: "figure.walk")
@@ -80,7 +80,6 @@ final class ImageButtonsTests: XCTestCase {
         }
 
         let pushExpectation = expectation(description: "Should push template when navigating")
-        let completionExpectation = expectation(description: "Should call completion after navigating")
 
         let interfaceController = MockInterfaceController()
         interfaceController.pushTemplateExpectation = pushExpectation
@@ -92,8 +91,11 @@ final class ImageButtonsTests: XCTestCase {
         let template = try distillTemplate(CPSelectableListItem.self, for: buttonsRow)
         environmentValues.resignActive()
 
-        template.handler?(template, { completionExpectation.fulfill() })
-        wait(for: [pushExpectation, completionExpectation], timeout: 0.1)
+        await withCheckedContinuation { continuation in
+            template.handler?(template, { continuation.resume() })
+        }
+
+        await fulfillment(of: [pushExpectation], timeout: 0.1)
         XCTAssertEqual(interfaceController.pushedTemplates[0] is CPNowPlayingTemplate, true)
     }
 }
