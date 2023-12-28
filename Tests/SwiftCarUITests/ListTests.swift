@@ -251,13 +251,11 @@ final class ListTests: XCTestCase {
     }
 
     func testListItemTask() async throws {
-        let expectation = expectation(description: "Should call into the task when about to display...")
         let listItem = Button(action: {}, title: "Hello World")
             .listItemTask(perform: { listItem in
                 do {
                     try await Task.sleep(for: .milliseconds(10))
                     listItem.setDetailText("Finished Loading")
-                    expectation.fulfill()
                 } catch {
                     XCTFail("Exception thrown during sleep")
                 }
@@ -268,22 +266,17 @@ final class ListTests: XCTestCase {
         XCTAssertEqual(template.detailText, nil)
         
         /// We should only get the task fired after we call willDisplayTemplate
-        template.willDisplayTemplate()
-        XCTAssertEqual(template.detailText, nil)
-
-        await fulfillment(of: [expectation], timeout: 0.02)
+        await template.willDisplayTemplate()
         XCTAssertEqual(template.detailText, "Finished Loading")
     }
 
     func testListItemTaskEmbedded() async throws {
-        let expectation = expectation(description: "Should call into the task when about to display...")
         let list = List {
             Button(action: {}, title: "Hello World")
                 .listItemTask(perform: { listItem in
                     do {
                         try await Task.sleep(for: .milliseconds(10))
                         listItem.setDetailText("Finished Loading")
-                        expectation.fulfill()
                     } catch {
                         XCTFail("Exception thrown during sleep")
                     }
@@ -300,10 +293,7 @@ final class ListTests: XCTestCase {
         XCTAssertEqual(firstItem.detailText, nil)
 
         /// We should only get the task fired after we call willDisplayTemplate
-        template.willDisplayTemplate()
-        XCTAssertEqual(firstItem.detailText, nil)
-
-        await fulfillment(of: [expectation], timeout: 0.02)
+        await template.willDisplayTemplate()
         XCTAssertEqual(firstItem.detailText, "Finished Loading")
     }
 

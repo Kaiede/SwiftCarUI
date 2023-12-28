@@ -104,21 +104,17 @@ extension StorageContainer {
 }
 
 extension StorageContainer {
-    func willDisplayTemplate() {
-        Task {
-            await displayTask?()
-        }
+    func willDisplayTemplate() async {
+        await displayTask?()
     }
 }
 
 extension CPListTemplate {
-    func willDisplayTemplate() {
-        Task {
-            await displayTask?()
-            for section in sections {
-                for item in section.items.compactMap({ $0 as? StorageContainer }) {
-                    await item.displayTask?()
-                }
+    func willDisplayTemplate() async {
+        await displayTask?()
+        for section in sections {
+            for item in section.items.compactMap({ $0 as? StorageContainer }) {
+                await item.displayTask?()
             }
         }
     }

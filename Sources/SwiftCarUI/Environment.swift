@@ -57,6 +57,8 @@ protocol CarTemplateApplicationScene {
     var contentStyle: UIUserInterfaceStyle { get }
 }
 
+extension CPTemplateApplicationScene: CarTemplateApplicationScene {}
+
 public struct EnvironmentValues {
     static var activeList: [EnvironmentValues] = [EnvironmentValues()]
     static var active: EnvironmentValues {
@@ -74,9 +76,9 @@ public struct EnvironmentValues {
         self.objectContext = nil
     }
 
-    internal init(scene: CarTemplateApplicationScene) {
+    internal init(scene: CarTemplateApplicationScene, objectContext: NSManagedObjectContext? = nil) {
         self.scene = scene
-        self.objectContext = nil
+        self.objectContext = objectContext
     }
 
     public subscript<K>(key: K.Type) -> K.Value where K : EnvironmentKey {

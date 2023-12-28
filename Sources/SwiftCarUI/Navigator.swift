@@ -43,6 +43,7 @@ internal protocol CarInterfaceController {
     func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool
     func popTemplate(animated: Bool) async throws -> Bool
     func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) async throws -> Bool
+    func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) async throws -> Bool
 }
 
 extension CPInterfaceController: CarInterfaceController {}
@@ -58,10 +59,19 @@ internal struct Navigator {
         self.controller = controller
     }
 
+    public func setRoot<V>(_ view: V, animated: Bool) async throws -> Bool
+    where V: CarView {
+        guard let controller = controller else { return false }
+        let template = try distillTemplate(CPTemplate.self, for: view)
+        await template.willDisplayTemplate()
+        return try await controller.setRootTemplate(template, animated: animated)
+    }
+
     public func navigateTo<V>(_ view: V, animated: Bool) async throws -> Bool
     where V: CarView {
         guard let controller = controller else { return false }
         let template = try distillTemplate(CPTemplate.self, for: view)
+        await template.willDisplayTemplate()
         return try await controller.pushTemplate(template, animated: animated)
     }
 
@@ -74,6 +84,7 @@ internal struct Navigator {
     where V: CarView {
         guard let controller = controller else { return false }
         let template = try distillTemplate(CPTemplate.self, for: view)
+        await template.willDisplayTemplate()
         return try await controller.presentTemplate(template, animated: animated)
     }
 

@@ -28,12 +28,25 @@ import XCTest
 @testable import SwiftCarUI
 
 class MockInterfaceController: CarInterfaceController {
+    var setRootExpectation: XCTestExpectation?
     var pushTemplateExpectation: XCTestExpectation?
     var popTemplateExpectation: XCTestExpectation?
     var presentTemplateExpectation: XCTestExpectation?
 
+    var currentRoot: CPTemplate? = nil
     var pushedTemplates: [CPTemplate] = []
     var presentedTemplates: [CPTemplate] = []
+
+    func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) async throws -> Bool {
+        currentRoot = rootTemplate
+        if let expectation = setRootExpectation {
+            expectation.fulfill()
+            return true
+        }
+
+        XCTFail("No expectation for setRoot")
+        return false
+    }
 
     func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool {
         pushedTemplates.append(templateToPush)
