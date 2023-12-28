@@ -81,7 +81,7 @@ final class ButtonTests: XCTestCase {
 
     func testProduceGridItem() throws {
         // Can't access the handler for CPGridButton
-        let button = Button(action: { }, label: { Label(text: "Hello", systemName: "cloud") })
+        let button = Button(action: { }, label: { Label("Hello", systemName: "cloud") })
 
         let template = try button.makeTemplate(CPGridButton.self)
         XCTAssertEqual(template.titleVariants, ["Hello"])
