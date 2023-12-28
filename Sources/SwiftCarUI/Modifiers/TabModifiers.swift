@@ -67,7 +67,7 @@ struct TabSystemItemModifier: TemplateModifier {
     }
 }
 
-extension CarView {
+public extension CarView {
     func tabDetails(title: String, systemName: String) -> some CarView {
         ModifiedCarView(
             content: self,

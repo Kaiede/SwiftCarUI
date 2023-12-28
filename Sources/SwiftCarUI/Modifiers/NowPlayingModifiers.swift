@@ -90,7 +90,7 @@ final class NowPlayingObserver: NSObject, CPNowPlayingTemplateObserver, DefaultI
     }
 }
 
-extension CarView {
+public extension CarView {
     func nowPlayingButtons<Content>(@ViewBuilder content: () -> Content) -> some CarView
     where Content: CarView {
         ModifiedCarView(

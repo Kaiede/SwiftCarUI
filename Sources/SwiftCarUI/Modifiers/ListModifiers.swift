@@ -48,7 +48,7 @@ struct ListItemUpdateModifier<P>: TemplateModifier where P: Publisher, P.Failure
     }
 }
 
-extension CarView {
+public extension CarView {
     func updateListItem<P>(
         on publisher: P,
         perform handler: @escaping (P.Output, ListItemUpdater) -> Void
