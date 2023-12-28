@@ -39,7 +39,7 @@ internal extension EnvironmentValues {
     }
 }
 
-internal protocol CarInterfaceController {
+public protocol CarInterfaceController {
     func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool
     func popTemplate(animated: Bool) async throws -> Bool
     func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) async throws -> Bool

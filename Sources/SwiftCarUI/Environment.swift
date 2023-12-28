@@ -52,7 +52,7 @@ public protocol EnvironmentKey {
     static var defaultValue: Self.Value { get }
 }
 
-protocol CarTemplateApplicationScene {
+public protocol CarTemplateApplicationScene {
     @available(iOS 15.4, *)
     var contentStyle: UIUserInterfaceStyle { get }
 }

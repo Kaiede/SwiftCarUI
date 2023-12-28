@@ -28,30 +28,30 @@ SOFTWARE.)
 import CarPlay
 import Foundation
 
-struct List<Content>: CarView
+public struct List<Content>: CarView
 where Content: CarView {
     let title: String?
     let content: Content
 
-    init(title: String? = nil, @ViewBuilder content: () -> Content) {
+    public init(title: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
 
-    var body: Never { fatalError() }
+    public var body: Never { fatalError() }
 }
 
-struct Section<Content>: CarView 
+public struct Section<Content>: CarView
 where Content: CarView {
     let title: String?
     let content: Content
 
-    init(title: String? = nil, @ViewBuilder content: () -> Content) {
+    public init(title: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
 
-    var body: Never { fatalError() }
+    public var body: Never { fatalError() }
 }
 
 extension List: CPTemplateRepresentable {

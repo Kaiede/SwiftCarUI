@@ -28,6 +28,8 @@ SOFTWARE.)
 import Foundation
 
 public struct EmptyCarView: CarView {
+    public init() {}
+
     public var body: Never { fatalError() }
 }
 

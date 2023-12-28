@@ -29,22 +29,21 @@ import CarPlay
 import CoreData
 import Foundation
 
-struct DataList<Content, Element>: CarView
+public struct DataList<Content, Element>: CarView
 where Content: CarView, Element: NSFetchRequestResult {
-    typealias Factory = (Element) -> Content
     let title: String?
     let request: NSFetchRequest<Element>
-    let content: Factory
+    let content: (Element) -> Content
 
     @Environment(\.managedObjectContext) private var managedObjectContext
 
-    init(title: String?, request: NSFetchRequest<Element>, content: @escaping Factory) {
+    public init(title: String?, request: NSFetchRequest<Element>, content: @escaping (Element) -> Content) {
         self.title = title
         self.request = request
         self.content = content
     }
 
-    var body: Never { fatalError() }
+    public var body: Never { fatalError() }
 }
 
 extension DataList: CPTemplateRepresentable {

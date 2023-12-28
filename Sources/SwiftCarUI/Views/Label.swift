@@ -33,12 +33,12 @@ public struct Label: CarView {
     let text: String
     let image: Image
 
-    init(_ text: String, systemName: String) {
+    public init(_ text: String, systemName: String) {
         self.text = text
         self.image = Image(systemName: systemName)
     }
 
-    init(_ text: String, image: UIImage) {
+    public init(_ text: String, image: UIImage) {
         self.text = text
         self.image = Image(image: image)
     }

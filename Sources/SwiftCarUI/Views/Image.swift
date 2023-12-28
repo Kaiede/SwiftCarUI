@@ -36,15 +36,15 @@ enum ImageKind {
 public struct Image: CarView {
     private let kind: Kind
 
-    init(systemName: String) {
+    public init(systemName: String) {
         self.kind = .systemName(systemName)
     }
 
-    init(image: UIImage) {
+    public init(image: UIImage) {
         self.kind = .image(image)
     }
 
-    init(nowPlaying: NowPlayingImage) {
+    public init(nowPlaying: NowPlayingImage) {
         self.kind = .nowPlayingBuiltin(nowPlaying)
     }
 

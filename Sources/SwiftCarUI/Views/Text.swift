@@ -31,7 +31,7 @@ import UIKit
 public struct Text: CarView {
     let text: String
 
-    init(_ text: String) {
+    public init(_ text: String) {
         self.text = text
     }
 

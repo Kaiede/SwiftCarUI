@@ -32,7 +32,7 @@ import Foundation
 public final class CarPlayHost {
     private var baseEnvironment: EnvironmentValues
 
-    init(
+    public init(
         scene: CarTemplateApplicationScene,
         controller: CarInterfaceController,
         managedObjectContext: NSManagedObjectContext? = nil,

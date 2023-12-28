@@ -28,8 +28,10 @@ SOFTWARE.)
 import CarPlay
 import Foundation
 
-struct NowPlaying: CarView {
-    var body: Never { fatalError() }
+public struct NowPlaying: CarView {
+    public init() {}
+
+    public var body: Never { fatalError() }
 }
 
 extension NowPlaying: CPTemplateRepresentable {

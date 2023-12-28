@@ -28,24 +28,24 @@ SOFTWARE.)
 import CarPlay
 import Foundation
 
-struct Button<Label>: CarView where Label: CarView  {
+public struct Button<Label>: CarView where Label: CarView  {
     private let action: Action
     private let label: Label
 
     @Environment(\.navigator) private var navigator
 
-    init(action: @escaping () -> Void, label: () -> Label) {
+    public init(action: @escaping () -> Void, label: () -> Label) {
         self.action = .action(action)
         self.label = label()
     }
 
-    init<Destination>(@ViewBuilder destination: () -> Destination, label: () -> Label) 
+    public init<Destination>(@ViewBuilder destination: () -> Destination, label: () -> Label)
     where Destination: CarView {
         self.action = .destination(destination())
         self.label = label()
     }
 
-    var body: Never { fatalError() }
+    public var body: Never { fatalError() }
 
     enum Action {
         case action(() -> Void)
@@ -53,20 +53,20 @@ struct Button<Label>: CarView where Label: CarView  {
     }
 }
 
-extension Button where Label == Text {
+public extension Button where Label == Text {
     init(action: @escaping () -> Void, title: String) {
         self.action = .action(action)
         self.label = Text(title)
     }
 
-    init<Destination>(@ViewBuilder destination: () -> Destination, title: String) 
+    init<Destination>(@ViewBuilder destination: () -> Destination, title: String)
     where Destination: CarView {
         self.action = .destination(destination())
         self.label = Text(title)
     }
 }
 
-extension Button where Label == Image {
+public extension Button where Label == Image {
     init(action: @escaping () -> Void, image: Image) {
         self.action = .action(action)
         self.label = image

@@ -28,16 +28,16 @@ SOFTWARE.)
 import CarPlay
 import Foundation
 
-struct ImageButtons<Content>: CarView
-where Content: CarView {
-    enum PressedButton {
-        case row
-        case item(Int)
-    }
+public enum ImageButtonsPressedButton {
+    case row
+    case item(Int)
+}
 
+public struct ImageButtons<Content>: CarView
+where Content: CarView {
     enum Action {
-        case action((PressedButton) -> Void)
-        case destination((PressedButton) -> any CarView)
+        case action((ImageButtonsPressedButton) -> Void)
+        case destination((ImageButtonsPressedButton) -> any CarView)
     }
 
     @Environment(\.navigator) private var navigator
@@ -46,13 +46,13 @@ where Content: CarView {
     private let action: Action
     private let content: Content
 
-    public init(title: String, action: @escaping (PressedButton) -> Void, @ViewBuilder content: () -> Content) {
+    public init(title: String, action: @escaping (ImageButtonsPressedButton) -> Void, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
         self.action = .action(action)
     }
 
-    public init<Destination>(title: String, @ViewBuilder destination: @escaping (PressedButton) -> Destination, @ViewBuilder content: () -> Content)
+    public init<Destination>(title: String, @ViewBuilder destination: @escaping (ImageButtonsPressedButton) -> Destination, @ViewBuilder content: () -> Content)
     where Destination: CarView {
         self.title = title
         self.content = content()
@@ -91,7 +91,7 @@ extension ImageButtons: CPTemplateRepresentable {
         return row
     }
 
-    private func callAction(_ action: Action, item: PressedButton, navigator: Navigator) async throws {
+    private func callAction(_ action: Action, item: ImageButtonsPressedButton, navigator: Navigator) async throws {
         switch action {
         case .action(let handler): handler(item)
         case .destination(let destination): let _ = try await navigator.navigateTo(destination(item), animated: true)
