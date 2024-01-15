@@ -40,6 +40,8 @@ internal extension EnvironmentValues {
 }
 
 public protocol CarInterfaceController {
+    var carTraitCollection: UITraitCollection { get }
+
     func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool
     func popTemplate(animated: Bool) async throws -> Bool
     func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) async throws -> Bool

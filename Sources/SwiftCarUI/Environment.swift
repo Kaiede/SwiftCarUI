@@ -55,9 +55,16 @@ public protocol EnvironmentKey {
 public protocol CarTemplateApplicationScene {
     @available(iOS 15.4, *)
     var contentStyle: UIUserInterfaceStyle { get }
+
+    var controller: CarInterfaceController { get }
 }
 
-extension CPTemplateApplicationScene: CarTemplateApplicationScene {}
+extension CPTemplateApplicationScene: CarTemplateApplicationScene {
+    /// Needed because the variable needs to match the type. CPInterfaceController implements CarInterfaceController, but doesn't satisfy the protocol.
+    public var controller: CarInterfaceController {
+        return self.interfaceController
+    }
+}
 
 public struct EnvironmentValues {
     static var activeList: [EnvironmentValues] = [EnvironmentValues()]
@@ -134,6 +141,10 @@ public struct EnvironmentValues {
     @available(iOS 15.4, *)
     public var contentStyle: UIUserInterfaceStyle {
         get { scene?.contentStyle ?? .unspecified }
+    }
+
+    public var traitCollection: UITraitCollection {
+        get { scene?.controller.carTraitCollection ?? .init() }
     }
 }
 

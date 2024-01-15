@@ -29,4 +29,5 @@ import XCTest
 
 final class MockTemplateScene: CarTemplateApplicationScene {
     var contentStyle: UIUserInterfaceStyle = .light
+    var controller: CarInterfaceController = MockInterfaceController()
 }

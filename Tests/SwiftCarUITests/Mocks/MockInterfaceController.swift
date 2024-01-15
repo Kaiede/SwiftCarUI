@@ -28,6 +28,8 @@ import XCTest
 @testable import SwiftCarUI
 
 class MockInterfaceController: CarInterfaceController {
+    var carTraitCollection: UITraitCollection = UITraitCollection(userInterfaceStyle: .light)
+    
     var setRootExpectation: XCTestExpectation?
     var pushTemplateExpectation: XCTestExpectation?
     var popTemplateExpectation: XCTestExpectation?

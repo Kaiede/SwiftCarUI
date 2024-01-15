@@ -28,13 +28,10 @@ SOFTWARE.)
 import Foundation
 import UIKit
 
-enum ImageKind {
-    case image(UIImage)
-    case systemName(String)
-}
-
 public struct Image: CarView {
     private let kind: Kind
+
+    @Environment(\.traitCollection) private var traits
 
     public init(systemName: String) {
         self.kind = .systemName(systemName)
@@ -42,6 +39,10 @@ public struct Image: CarView {
 
     public init(image: UIImage) {
         self.kind = .image(image)
+    }
+
+    public init(size: CGSize, renderer: @escaping (UIGraphicsImageRendererContext) -> Void) {
+        self.kind = .renderer(size, renderer)
     }
 
     public init(nowPlaying: NowPlayingImage) {
@@ -64,6 +65,52 @@ extension Image {
         case image(UIImage)
         case systemName(String)
         case nowPlayingBuiltin(NowPlayingImage)
+        case renderer(CGSize, (UIGraphicsImageRendererContext) -> Void)
+    }
+}
+
+extension Image {
+    func renderSingle(size: CGSize, actions: (UIGraphicsImageRendererContext) -> Void) -> UIImage {
+        return renderDual(size: size, lightActions: actions, darkActions: actions)
+    }
+
+    func renderDual(
+        size: CGSize,
+        lightActions: (UIGraphicsImageRendererContext) -> Void,
+        darkActions: (UIGraphicsImageRendererContext) -> Void
+    ) -> UIImage {
+        let (lightTraits, darkTraits) = mutateTraits()
+        let lightFormat = UIGraphicsImageRendererFormat(for: lightTraits)
+        let darkFormat = UIGraphicsImageRendererFormat(for: darkTraits)
+        let lightRenderer = UIGraphicsImageRenderer(size: size, format: lightFormat)
+        let darkRenderer = UIGraphicsImageRenderer(size: size, format: darkFormat)
+
+        let lightImage = lightRenderer.image(actions: lightActions)
+        let darkImage = darkRenderer.image(actions: darkActions)
+        lightImage.imageAsset?.register(darkImage, with: UITraitCollection(userInterfaceStyle: .dark))
+        return lightImage
+    }
+
+    func mutateTraits() -> (light: UITraitCollection, dark: UITraitCollection) {
+        if #available(iOS 17.0, *) {
+            let lightTraits = traits.modifyingTraits { traits in
+                traits.userInterfaceStyle = .light
+            }
+            let darkTraits = traits.modifyingTraits { traits in
+                traits.userInterfaceStyle = .dark
+            }
+            return (lightTraits, darkTraits)
+        } else {
+            let lightTraits = UITraitCollection(traitsFrom: [
+                traits, 
+                UITraitCollection(userInterfaceStyle: .light)
+            ])
+            let darkTraits = UITraitCollection(traitsFrom: [
+                traits,
+                UITraitCollection(userInterfaceStyle: .dark)
+            ])
+            return (lightTraits, darkTraits)
+        }
     }
 }
 
@@ -75,6 +122,7 @@ extension Image: LabelRepresentable {
         case .image(let image): return image
         case .systemName(let systemName): return UIImage(systemName: systemName)
         case .nowPlayingBuiltin(_): return nil
+        case .renderer(let size, let actions): return renderSingle(size: size, actions: actions)
         }
     }
 
@@ -83,6 +131,7 @@ extension Image: LabelRepresentable {
         case .image(_): return nil
         case .systemName(let systemName): return systemName
         case .nowPlayingBuiltin(_): return nil
+        case .renderer(_, _): return nil
         }
     }
 
@@ -91,6 +140,7 @@ extension Image: LabelRepresentable {
         case .image(_): return nil
         case .systemName(_): return nil
         case .nowPlayingBuiltin(let image): return image
+        case .renderer(_, _): return nil
         }
     }
 }

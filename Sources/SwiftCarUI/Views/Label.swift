@@ -43,6 +43,11 @@ public struct Label: CarView {
         self.image = Image(image: image)
     }
 
+    public init(_ text: String, image: Image) {
+        self.text = text
+        self.image = image
+    }
+
     public var body: Never { fatalError() }
 }
 
