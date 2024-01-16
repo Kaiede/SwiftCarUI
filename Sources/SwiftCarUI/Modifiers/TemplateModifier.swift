@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.)
 */
 
+#if canImport(CarPlay)
+
 import Foundation
 
 public protocol TemplateModifier {
@@ -58,3 +60,5 @@ where Content: CarView, Modifier: TemplateModifier {
         try modifier.mutate(template: template)
     }
 }
+
+#endif
